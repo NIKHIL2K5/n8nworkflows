@@ -1,0 +1,268 @@
+{
+  "name": "SCRIPT GENERATOR",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ada2b33e-5331-4f22-b788-f574c51b09c0",
+      "name": "When chat message received",
+      "webhookId": "d2e78e71-f1cb-4d2c-8856-c26f91f0985d"
+    },
+    {
+      "parameters": {
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are an AI Agent running inside n8n whose job is to help the user create the most hookful, engaging, polished, and highly detailed content scripts.\n\n### Your Main Purpose\n- Transform ANY user input into a powerful, clean, viral-worthy script.\n- Provide scripts that are clear, structured, engaging, and “hook-first”.\n- Every output must be well-crafted, professional, and easy to use for reels, videos, posts, or marketing content.\n\n### Rules for Script Creation\n- Always generate an extremely strong hook in the first line.\n- Follow with clear, smooth storytelling or explanation.\n- Break complex ideas into simple, understandable points.\n- Keep the language engaging, sharp, and modern.\n- Make the content visually appealing (spacing, formatting, and flow).\n- Avoid unnecessary repetition.\n- Provide examples if helpful.\n- Always deliver the BEST version of the idea.\n\n### SerpAPI Usage Rules\nYou ARE allowed to use SerpAPI for real-time information such as:\n- trends\n- news\n- data\n- facts\n- comparisons\n- recent events\n- statistics\n\nWhen you decide to use SerpAPI:\n1. ALWAYS include a proper `q` parameter.\n2. The `q` value MUST come from the user’s message unless specified otherwise.\n3. NEVER call SerpAPI without a valid query.\n4. NEVER call SerpAPI with an empty or null query.\n5. If the user’s message is unclear, ask:\n   “What exactly should I search for on SerpAPI?”\n\n### SerpAPI Example\nIf the user says: “Search for laptop prices”\nYou must call SerpAPI with:\nq: \"laptop prices\"\n\n### Response Quality Requirements\n- Responses must ALWAYS be neat, structured, and clean.\n- Use bullet points, line breaks, and formatting for clarity.\n- Be detailed but not unnecessarily long.\n- Maintain a professional yet friendly tone.\n- ALWAYS aim to improve the user's idea and elevate it.\n\n### Final Behavior\n- Think deeply.\n- Answer smartly.\n- Make content more valuable, more viral, more hookful, more useful.\n- Avoid large token dumps.\n- Avoid rambling or filler content.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "cb20fa6f-499a-4448-b322-8e6675e1a97b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        304,
+        288
+      ],
+      "id": "4712cf6e-153e-4bf7-bec7-38d5bf42cdbe",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        480,
+        208
+      ],
+      "id": "1eff116b-5fc0-4889-8ec6-74de904c1b27",
+      "name": "SerpAPI",
+      "credentials": {
+        "serpApi": {
+          "id": "TwtEpDkyPhwQ8TeZ",
+          "name": "Web Search"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "maxTokens": 1024
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        176,
+        224
+      ],
+      "id": "09a6794c-872f-46de-8beb-e5bc521f4039",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "8Pcb0o3ejDHa0jad",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"field1\": { \"type\": \"string\" },\n    \"field2\": { \n      \"type\": \"array\",\n      \"items\": { \"type\": \"string\" }\n    },\n    \"field3\": { \n      \"type\": \"object\",\n      \"properties\": {\n        \"subfield\": { \"type\": \"string\" }\n      }\n    }\n  },\n  \"required\": [\"field1\"]\n}\n",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        800,
+        272
+      ],
+      "id": "91eb686e-a954-424a-9cd0-d4ec6bf167e3",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        736,
+        480
+      ],
+      "id": "33293719-f804-47ca-b327-f7451f6b4ef6",
+      "name": "OpenRouter Chat Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "8Pcb0o3ejDHa0jad",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1a3OoUnHwcF3hGFQ65G9DQ_Co5WEZafzgpY89-D9cOaY",
+          "mode": "list",
+          "cachedResultName": "YOUTUBE SCRIPT",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1a3OoUnHwcF3hGFQ65G9DQ_Co5WEZafzgpY89-D9cOaY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1a3OoUnHwcF3hGFQ65G9DQ_Co5WEZafzgpY89-D9cOaY/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [
+            "y"
+          ],
+          "schema": [
+            {
+              "id": "y",
+              "displayName": "y",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        560,
+        0
+      ],
+      "id": "560da5c0-17b2-492e-ab70-d9008c72cb8a",
+      "name": "Create spreadsheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "p86A4hcOGPIeC8fu",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Structured Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Create spreadsheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0d59f94c-e9ad-4c2e-85a6-dc91f059623c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "89c01126c1befae5e9f337a94a7577e4866ce1d4ce1c9b392194533932ca1fab"
+  },
+  "id": "blXmDMMRC8x0kkyH",
+  "tags": []
+}

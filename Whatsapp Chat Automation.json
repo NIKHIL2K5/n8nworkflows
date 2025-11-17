@@ -1,0 +1,131 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "25709d1e-e94e-4174-ba1d-84b3cf1dbc78",
+      "name": "WhatsApp Trigger",
+      "webhookId": "4eb0a0f3-eff3-4a1f-9669-c22e5bcb7914",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "4vuZQvhVS3aZWctf",
+          "name": "WhatsApp OAuth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        160,
+        16
+      ],
+      "id": "da68fc59-b9f6-4f3e-be3c-7468b669d270",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        32,
+        224
+      ],
+      "id": "88d6ce26-22b2-42cb-860e-368001346439",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "xIz79Xmzg4Rm5hFT",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "920269187830705",
+        "recipientPhoneNumber": "+91 93906 10327",
+        "textBody": "Text",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1.1,
+      "position": [
+        512,
+        32
+      ],
+      "id": "d37ee273-ae82-4f63-a67d-b07deed01ab3",
+      "name": "Send message",
+      "webhookId": "8d7ee1db-7f8a-4e1c-999f-d9fb9fff7256",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "eCYVKrLSuqy609yW",
+          "name": "WhatsApp account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "7f3d6967-3d33-456f-bb2a-c29a64e9af02",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ee92708bedfffa9cf1b143ba1effd874a521442e63af5b9d590e37a5cf799c68"
+  },
+  "id": "eFjR9XDGeSxgA6ta",
+  "tags": []
+}

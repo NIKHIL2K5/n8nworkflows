@@ -1,0 +1,704 @@
+{
+  "name": "Editing Automation",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        0
+      ],
+      "id": "5794f5c1-9303-432b-b11b-85cb240e2bbd",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1Btw0vXVaQ3jAFjpC_xW1UQs_BTzt9lll",
+          "mode": "list",
+          "cachedResultName": "Top 5 AI Tools Every Student Must Use in 2025 🚀 _ Boost Productivity & Study Smarter!.mp4",
+          "cachedResultUrl": "https://drive.google.com/file/d/1Btw0vXVaQ3jAFjpC_xW1UQs_BTzt9lll/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -112,
+        0
+      ],
+      "id": "9d60d334-287f-4402-911f-b4900b5df865",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "75iLqgX8vb9LsfwH",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=Top 5 AI Tools Every Student Must Use in 2025 🚀 _ Boost Productivity & Study Smarter!.mp4",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        80,
+        0
+      ],
+      "id": "76bee8b6-5e70-4e46-ac04-7926b1f810e8",
+      "name": "Read/Write Files from Disk",
+      "alwaysOutputData": false,
+      "executeOnce": false,
+      "retryOnFail": false,
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "content": "Getting the Required files",
+        "height": 272,
+        "width": 400
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "5fbc9300-de06-41e3-aa17-a229ae2fb0cb",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "FADEIN AND FADEOUT MULTIPLE CLIPS\n",
+        "height": 240,
+        "width": 656
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        560,
+        -400
+      ],
+      "typeVersion": 1,
+      "id": "a481a570-e9f7-4c81-8dd7-787f5b3bd681",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "command": "=# Set folder containing clips\n$folder = \"C:\\n8n\\videos\"   # <--- CHANGE IF NEEDED\nSet-Location $folder\n\n# Get all videoclip_*.mp4 files sorted\n$inputs = Get-ChildItem -Filter \"videoclip_*.mp4\" | Sort-Object Name\n\nif ($inputs.Count -lt 2) {\n    Write-Host \"Need at least 2 clips\"\n    exit 1\n}\n\n# Build input arguments\n$inputArgs = \"\"\n$index = 0\nforeach ($clip in $inputs) {\n    $inputArgs += \" -i `\"$($clip.FullName)`\"\"\n    $index++\n}\n\n# Collect durations (rounded)\n$durations = @()\nforeach ($clip in $inputs) {\n    $d = ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 \"$($clip.FullName)\"\n    $dur = [math]::Round([double]$d)\n    $durations += $dur\n}\n\n# Build filter_complex for fade transitions\n$filter = \"\"\n$last = \"[0:v]\"\n$transition = \"fade\"   # change to smoothleft / slideright / etc.\n$duration = 1          # fade duration in seconds\n$offset = 0\n$outIndex = 1\n\nfor ($i = 0; $i -lt $durations.Count - 1; $i++) {\n\n    $next = \"[$($i+1):v]\"\n    $outv = \"[v$outIndex]\"\n\n    $clipDur = $durations[$i]\n    $offset += ($clipDur - $duration)\n\n    $filter += \"$last$next xfade=transition=$transition:duration=$duration:offset=$offset $outv;\"\n    \n    $last = $outv\n    $outIndex++\n}\n\n# Remove last semicolon\n$filter = $filter.TrimEnd(\";\")\n\n# Output final video path\n$output = \"C:\\n8n\\videos\\combinedClipsSmooth.mp4\"\n\n# Build final ffmpeg command\n$cmd = \"ffmpeg -y $inputArgs -filter_complex `\"$filter`\" -map $last -c:v libx264 -crf 23 -preset veryfast `\"$output`\"\"\n\nWrite-Host \"Running:\"\nWrite-Host $cmd\n\n# Run the command\nInvoke-Expression $cmd\n"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        672,
+        -336
+      ],
+      "id": "6f3b6559-f5c7-456e-a7ea-1ca1112dcb78",
+      "name": "SMOOTH TRANSITION"
+    },
+    {
+      "parameters": {
+        "fileSelector": "Top 5 AI Tools Every Student Must Use in 2025 🚀 _ Boost Productivity & Study Smarter!.mp4",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        880,
+        -336
+      ],
+      "id": "a6b5f096-da1b-4e77-a68a-48e41c6342c6",
+      "name": "Read/Write Files from Disk1"
+    },
+    {
+      "parameters": {
+        "command": "=ffmpeg -y -i \"C:\\IMP - FOL-1\\COADING\\automationvideoeditingtesting\\input.mp4\" -vf \"fade=t=in:st=0:d=1,fade=t=out:st=5:d=1\" -c:a copy \"C:\\IMP - FOL-1\\COADING\\automationvideoeditingtesting\\video_with_fade.mp4\"\n"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        624,
+        0
+      ],
+      "id": "21cdeaa0-3447-4411-92e6-caa20f2b022e",
+      "name": "SMOOTH TRANSITION1"
+    },
+    {
+      "parameters": {
+        "fileSelector": "Top 5 AI Tools Every Student Must Use in 2025 🚀 _ Boost Productivity & Study Smarter!.mp4",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        944,
+        0
+      ],
+      "id": "dbc038e4-d753-43ea-8591-3482dfa14ecc",
+      "name": "Read/Write Files from Disk2"
+    },
+    {
+      "parameters": {
+        "content": "SINGLE CLIP FADEIN AND FADEOUT\n",
+        "height": 288,
+        "width": 672
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        544,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "08b242ed-7cc4-4fd2-9722-0868294ad4de",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "TRANSITIONS\n",
+        "height": 992,
+        "width": 944,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        432,
+        -496
+      ],
+      "typeVersion": 1,
+      "id": "842ad658-b112-40cc-89d4-ad917277ef46",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "FADEIN AND FADEOUT TRANSITION\n",
+        "height": 720,
+        "width": 806,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        480,
+        -448
+      ],
+      "typeVersion": 1,
+      "id": "850f70bd-bf72-4199-bfce-cad7857a15d1",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "command": "=ffmpeg -y -i \"C:\\IMP - FOL-1\\COADING\\automationvideoeditingtesting\\input.mp4\" -filter_complex \"scale=1280:720, pad=2560:720:0:0, setpts=PTS-STARTPTS, crop=1280:720:x='if(lte(t,1), -1280 + t*1280, if(gte(t,245), (t-245)*1280, 0))':y=0\" -c:a copy \"C:\\IMP - FOL-1\\COADING\\automationvideoeditingtesting\\single_slide_effect.mp4\"\n"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        592,
+        320
+      ],
+      "id": "de82c0d3-9409-43af-b0cd-7a4dfeaaa701",
+      "name": "SLIDE TRANSITION"
+    },
+    {
+      "parameters": {
+        "fileSelector": "input",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        992,
+        320
+      ],
+      "id": "4e374cd4-3138-4405-89cd-0b589fa43d2c",
+      "name": "Read/Write Files from Disk3"
+    },
+    {
+      "parameters": {
+        "command": "=ffmpeg -y -i \"C:\\IMP - FOL-1\\COADING\\automationvideoeditingtesting\\input.mp4\" -vn -acodec copy \"C:\\IMP - FOL-1\\COADING\\automationvideoeditingtesting\\audio.m4a\"\n"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        672,
+        736
+      ],
+      "id": "98f22778-eadb-47bf-93e0-0ce0a5e89ea3",
+      "name": "AUDIO EXTRATION"
+    },
+    {
+      "parameters": {
+        "fileSelector": "input",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        1104,
+        736
+      ],
+      "id": "a003f1bd-0ac1-4c47-a215-4ce29edc5cb1",
+      "name": "Read/Write Files from Disk4"
+    },
+    {
+      "parameters": {
+        "content": "Audio \n",
+        "height": 576,
+        "width": 880,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        512,
+        672
+      ],
+      "typeVersion": 1,
+      "id": "0bb0439b-7c3d-4c05-8f2b-181c8eb5f5d1",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "fileSelector": "input",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        1088,
+        1040
+      ],
+      "id": "e881846d-8027-43b1-b5cb-15d63e77c6f1",
+      "name": "Read/Write Files from Disk5"
+    },
+    {
+      "parameters": {
+        "content": "Audio Extractor",
+        "height": 224,
+        "width": 704,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        608,
+        704
+      ],
+      "typeVersion": 1,
+      "id": "a0b79de9-2d67-4a7e-8ece-a5337a32079e",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "Mute Audio from video\n",
+        "height": 224,
+        "width": 704,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        608,
+        992
+      ],
+      "typeVersion": 1,
+      "id": "28e8ced7-bc8e-4083-ad2e-a9b89c342361",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Video",
+        "height": 1520,
+        "width": 864,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1824,
+        -576
+      ],
+      "typeVersion": 1,
+      "id": "f9dbff2d-efde-41fa-ac45-e8e60580bf27",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "fileSelector": "input",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        2384,
+        -432
+      ],
+      "id": "e07fa2d3-9176-4dff-b2cf-e18fb7c08f82",
+      "name": "Read/Write Files from Disk6"
+    },
+    {
+      "parameters": {
+        "content": "Trim the Video",
+        "height": 256,
+        "width": 688,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1920,
+        -496
+      ],
+      "typeVersion": 1,
+      "id": "15032394-f4bc-4744-b324-8bd47e3e5e95",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "fileSelector": "input",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        2384,
+        -96
+      ],
+      "id": "51c554ae-f5ed-432f-9d15-41e92cb82151",
+      "name": "Read/Write Files from Disk7"
+    },
+    {
+      "parameters": {
+        "content": "Loop the Video",
+        "height": 256,
+        "width": 688,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1920,
+        -176
+      ],
+      "typeVersion": 1,
+      "id": "a7fcada9-719d-485b-af72-0700c85cd239",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "command": "=ffmpeg -y -i \"C:\\IMP - FOL-1\\COADING\\automationvideoeditingtesting\\input.mp4\" -an -c:v copy \"C:\\IMP - FOL-1\\COADING\\automationvideoeditingtesting\\muted_video.mp4\"\n"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        640,
+        1040
+      ],
+      "id": "64739af8-e8dd-4fe5-91e7-e75e90d8ba32",
+      "name": "Mute Audio from video"
+    },
+    {
+      "parameters": {
+        "command": "=ffmpeg -y -i \"C:\\IMP - FOL-1\\COADING\\automationvideoeditingtesting\\input.mp4\" -t 10 -c copy \"C:\\IMP - FOL-1\\COADING\\automationvideoeditingtesting\\trimmed_video.mp4\"\n"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        2000,
+        -432
+      ],
+      "id": "229ed6c3-ddc7-45f4-968a-568a2bc9b7a7",
+      "name": "Trim Video"
+    },
+    {
+      "parameters": {
+        "command": "=ffmpeg -y -stream_loop 2 -i \"C:\\IMP - FOL-1\\COADING\\automationvideoeditingtesting\\input.mp4\" -c copy \"C:\\IMP - FOL-1\\COADING\\automationvideoeditingtesting\\looped_video.mp4\"\n"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        2016,
+        -96
+      ],
+      "id": "dcc37b0e-22cd-44b1-97e6-42bd53f2e587",
+      "name": "Loop Video"
+    },
+    {
+      "parameters": {
+        "content": "Resize the Video",
+        "height": 256,
+        "width": 688,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1920,
+        128
+      ],
+      "typeVersion": 1,
+      "id": "da0e8a75-225c-4a58-9ed5-522c605b1b88",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "command": "=ffmpeg -y -i \"C:\\IMP - FOL-1\\COADING\\automationvideoeditingtesting\\input.mp4\" -vf \"scale=1280:720\" -c:a copy \"C:\\IMP - FOL-1\\COADING\\automationvideoeditingtesting\\resized_video.mp4\"\n"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        2016,
+        208
+      ],
+      "id": "3da7f9a6-c6ce-4c8e-9c25-b48e7f5f9c9d",
+      "name": "Resize Video"
+    },
+    {
+      "parameters": {
+        "fileSelector": "input",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        2368,
+        208
+      ],
+      "id": "cd3056fd-01c8-4e6f-99fb-cb69555e3d39",
+      "name": "Read/Write Files from Disk8"
+    },
+    {
+      "parameters": {
+        "fileSelector": "input",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        2384,
+        480
+      ],
+      "id": "a4642367-d7bc-40e0-86da-8f9bc871ea01",
+      "name": "Read/Write Files from Disk9"
+    },
+    {
+      "parameters": {
+        "command": "=ffmpeg -y -ss 5 -i \"C:\\IMP - FOL-1\\COADING\\automationvideoeditingtesting\\input.mp4\" -frames:v 1 \"C:\\IMP - FOL-1\\COADING\\automationvideoeditingtesting\\frame_5s.png\"\n"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        2016,
+        480
+      ],
+      "id": "509d8bd2-f509-4d2e-a7ec-148cf7cc2a66",
+      "name": "Extract Frame"
+    },
+    {
+      "parameters": {
+        "content": "Extract Frame",
+        "height": 208,
+        "width": 688,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1920,
+        448
+      ],
+      "typeVersion": 1,
+      "id": "f8175821-a019-4ba3-9c09-6eaf9e9ed759",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "fileSelector": "input",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        2384,
+        736
+      ],
+      "id": "e1cd5428-3810-4f96-b615-8c0a29d767af",
+      "name": "Read/Write Files from Disk10"
+    },
+    {
+      "parameters": {
+        "command": "=ffmpeg -y -i \"C:\\IMP - FOL-1\\COADING\\automationvideoeditingtesting\\input.mp4\" -vf \"drawtext=text='YOUR TEXT HERE':fontcolor=white:fontsize=48:x=50:y=50\" -c:a copy \"C:\\IMP - FOL-1\\COADING\\automationvideoeditingtesting\\text_added.mp4\"\n"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        2032,
+        736
+      ],
+      "id": "feeb2eff-4ac5-4ab8-9f5c-39608198e40d",
+      "name": "Add text"
+    },
+    {
+      "parameters": {
+        "content": "Add text to Video",
+        "height": 208,
+        "width": 688,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1920,
+        688
+      ],
+      "typeVersion": 1,
+      "id": "7ab13769-981c-4db2-bd04-153d7946f459",
+      "name": "Sticky Note13"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        []
+      ]
+    },
+    "SMOOTH TRANSITION": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SMOOTH TRANSITION1": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SLIDE TRANSITION": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AUDIO EXTRATION": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mute Audio from video": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trim Video": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Video": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resize Video": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Frame": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add text": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk10",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a0dc5ed1-6cc1-424f-89b1-f1c42cc7fd08",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "89c01126c1befae5e9f337a94a7577e4866ce1d4ce1c9b392194533932ca1fab"
+  },
+  "id": "ASzhYiM4DttFOSgt",
+  "tags": []
+}
